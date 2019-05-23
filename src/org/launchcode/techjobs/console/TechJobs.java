@@ -38,7 +38,7 @@ public class TechJobs {
                 String columnChoice = getUserSelection("List", columnChoices);
 
                 if (columnChoice.equals("all")) {
-                    printJobs(JobData.findAll());
+                    printJobs(JobData.findAll(), "anything", "our database");
                 } else {
 
                     ArrayList<String> results = JobData.findAll(columnChoice);
@@ -60,10 +60,14 @@ public class TechJobs {
                 System.out.println("\nSearch term: ");
                 String searchTerm = in.nextLine();
 
+                ArrayList<HashMap<String, String>> searchResults;
+
                 if (searchField.equals("all")) {
-                    System.out.println("Search all fields not yet implemented.");
+                    searchResults = JobData.findByValue(searchTerm);
+                    printJobs(searchResults, searchTerm, "our database");
                 } else {
-                    printJobs(JobData.findByColumnAndValue(searchField, searchTerm));
+                    searchResults = JobData.findByColumnAndValue(searchField, searchTerm);
+                    printJobs(searchResults, searchTerm, searchField);
                 }
             }
         }
@@ -109,8 +113,20 @@ public class TechJobs {
     }
 
     // Print a list of jobs
-    private static void printJobs(ArrayList<HashMap<String, String>> someJobs) {
-
-        System.out.println("printJobs is not implemented yet");
+    private static void printJobs(ArrayList<HashMap<String, String>> someJobs, String searchTerm, String searchField) {
+        if (someJobs.size() > 0) {
+            //loop to go through each HashMap in the ArrayList someJobs
+            for (HashMap<String, String> jobFields : someJobs) {
+                System.out.println("*****");
+                for (HashMap.Entry<String, String> jobField : jobFields.entrySet()) {
+                    System.out.println(jobField.getKey() + ": " + jobField.getValue());
+                }
+            }
+            System.out.println("*****");
+        }
+        else {
+            System.out.println("We could not find " + searchTerm + " in " + searchField + ". Please " +
+                            "try searching in another field, or use another search term.");
+        }
     }
 }
